@@ -2,7 +2,25 @@
 # na kolegiju Razvoj poslovnih aplikacija
 # za brisanje: https://note.nkmk.me/en/python-list-clear-pop-remove-del/
 
-class Dokumentarij:
+class DokumentarijModel:
+    def show_names(self, new_name):
+        self.names = new_name
+
+    def get_new_name(self):
+        self.names = []
+        # Asks the user for a new name, and stores the name if we don't already
+        #  know about this person.
+        new_name = input("\nUnesite ime studenta: ")
+        if new_name in self.names:
+            print("\n{} je već upisan/a u dokumentariju!".format(new_name.title()))
+        else:
+            self.names.append(new_name)
+            print("\nDobrodošao/la {}!\n".format(new_name.title()))
+
+
+class DokumentarijView:
+    
+    
     def display_title_bar(self):    
         print("\t****************************************************")
         print("\t***  Dokumentarij - Razvoj poslovnih aplikacija  ***")
@@ -17,44 +35,44 @@ class Dokumentarij:
         return input("Što želite napraviti u dokumentariju?")
         
     def show_names(self):
+        self.names = []
         # Shows the names of everyone who is already in the list.
         print("\nOvo je popis studenata na kolegiju Razvoj poslovnih aplikacija 2019/2020:\n")
         for name in self.names:
             print(name.title())
-            
-    def get_new_name(self):
-        # Asks the user for a new name, and stores the name if we don't already
-        #  know about this person.
-        new_name = input("\nUnesite ime studenta: ")
-        if new_name in self.names:
-            print("\n{} je već upisan/a u dokumentariju!".format(new_name.title()))
-        else:
-            self.names.append(new_name)
-            print("\nDobrodošao/la {}!\n".format(new_name.title()))
+        
 
+    
+
+class DokumentarijContoller:
+    def __init__(self, model, view):
+        self.model = model
+        self.view = view
+    
     ### MAIN PROGRAM ###
 
     # Set up a loop where users can choose what they'd like to do.
     def play(self):
-        self.names = []
-
+        self.model.names = []
+        self.view.names = []
         choice = ''
-        self.display_title_bar()
+        self.view.display_title_bar()
         while choice != 'x':    
             
-            choice = self.get_user_choice()
+            choice = self.view.get_user_choice()
             
             # Respond to the user's choice.
-            self.display_title_bar()
+            self.view.display_title_bar()
             if choice == '1':
-                self.show_names()
+                self.view.show_names()
+                self.model.show_names()
             elif choice == '2':
-                self.get_new_name()
+                self.model.get_new_name()
             elif choice == 'x':
                 print("\nHvala na pregledu/uređivanju dokumentarija. Pozdrav.")
             else:
                 print("\nGreška - napravite hvatanje izuzetaka sami za vježbu.\n")
                 
 if __name__ == "__main__":
-    game = Dokumentarij()
+    game = DokumentarijContoller(DokumentarijModel(), DokumentarijView())
     game.play()
